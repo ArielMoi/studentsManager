@@ -34,6 +34,14 @@ const studentsContainer = document.querySelector('.students-container');
 const myApi = 'https://apple-seeds.herokuapp.com/api/users/';
 
 let studentsData = {};
+const headerTR =
+`<td data-type="firstName">firstName</td>
+<td data-type="lastName">lastName</td>
+<td data-type="capsule">capsule</td>
+<td data-type="gender">gender</td>
+<td data-type="age">age</td>
+<td data-type="city">city</td>
+<td data-type="hobby">hobby</td>`;
 
 async function collectingStudentsData() {
     // adding loader animation - -  - - - - -
@@ -57,25 +65,17 @@ async function collectingStudentsData() {
 
 let editedStudent;
 collectingStudentsData().then(() => {
-    console.log(studentsData)
     displayingData();
-    // deleteRow(0);
-    // editedStudent = editRow(0);
+    // searching('Ari');
 })
 
-function displayingData() {
+function displayingData(withHeader = true) {
     studentsContainer.innerHTML = '';
 
     let tr = document.createElement('tr');
 
-    tr.innerHTML =
-        `<td data-type="firstName">firstName</td>
-    <td data-type="lastName">lastName</td>
-    <td data-type="capsule">capsule</td>
-    <td data-type="gender">gender</td>
-    <td data-type="age">age</td>
-    <td data-type="city">city</td>
-    <td data-type="hobby">hobby</td>`
+    withHeader ? tr.innerHTML = headerTR : tr.innerHTML = ''; //// for search function.
+
 
     studentsContainer.appendChild(tr);
 
@@ -125,19 +125,19 @@ function editRow(rowNum) {
     return studentData;
 }
 
-function applyEditOnRow(rowNum, studentData) {
-    console.log(studentData)
+function applyEditOnRow(rowNum, studentData, confirm = true) {
+    if (confirm){
     let inputs = document.querySelectorAll('input')
-    let firstOne = true;
+    let firstInput = true;// ignores search input (the first input)
     for (let input of inputs) {
-        if (!firstOne) {
+        if (!firstInput) {
             if (input.value != input.getAttribute('value')) {
                 let type = input.getAttribute('data-type');
                 studentData[type] = input.value;
             }
-        } else firstOne = false; // ignores search input
+        } else firstInput = false; 
     }
-
+    }
     studentsData[rowNum] = studentData;
     displayingData();
 }
@@ -146,23 +146,34 @@ function applyEditOnRow(rowNum, studentData) {
 studentsContainer.addEventListener('click', (e) => {
     let row = e.target.getAttribute('data-row');
     if (e.target.innerText == 'Confirm') {
-        console.log('confirm');
         applyEditOnRow(row, editedStudent);
     }
     if (e.target.innerText == 'Edit') {
-        console.log('edit');
-
         editedStudent = editRow(row);
     }
     if (e.target.innerText == 'Delete') {
-        console.log('del');
-
         deleteRow(row);
     }
     if (e.target.innerText == 'Cancel') {
-        console.log('cancel');
-
-        displayingData();
+        applyEditOnRow(row, editedStudent, false); // need to fix!!!
     }
-
 })
+
+document.querySelector('input').addEventListener('input', (event) => {
+    console.log('press');
+    console.log(event.target.value);
+    searching(event.target.value)
+});
+
+
+function searching(value){
+    displayingData(false);
+    let allRows =  document.querySelectorAll('tr');
+    studentsContainer.innerHTML = headerTR;
+    for (let i in allRows) { // i = 1, to skip first row of headers
+        console.log(allRows[i]);
+        if (allRows[i].textContent.toLowerCase().includes(value.toLowerCase())){
+            studentsContainer.appendChild(allRows[i])
+        } /// trow ERROR because all allRows becomes shorter
+    }
+}
