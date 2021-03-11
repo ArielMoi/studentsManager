@@ -1,35 +1,5 @@
-/*
-
-- creating divs in a table shape
-
-DATA
-- fetching the data
-- rendering it
-- adding it to local storage
-- creates a function to translate the local storage data to obj.
-
-** all changes will be done in the obj. can update local storage for add features
-** adding data-row - key number in obj.
-
-* each change made in table will translate to updating the obj and the func to update table from obj
-
-FUNCTIONS
-- functions to update table from obj
-- function to delete row (deletes key in obj)
-- function to update row (recognizing from input if changed and then replace the data)
-
-
-EVENT LISTENER
-- on all grid,
-recognizing current obj bt data=row and using it in obj to get details
-*/
-
-
-/// fetching data from api and rendreing it to an object
-
+// variables for continue use.
 const studentsContainer = document.querySelector('.students-container');
-// console.log(studentsContainer);
-
 
 const myApi = 'https://apple-seeds.herokuapp.com/api/users/';
 
@@ -43,12 +13,17 @@ const headerTR =
 <td data-type="city">city</td>
 <td data-type="hobby">hobby</td>`;
 
-async function collectingStudentsData() {
-    // adding loader animation - -  - - - - -
+let editedStudent; // is updated. for edit mode.
+
+
+// FUNCTIONS ---------
+
+async function collectingStudentsData() { // func to collect data from API
+    //TODO: add loader animation - -  - - - - -
     response = await fetch(myApi);
     response = await response.json();
 
-    for (let student of response) {
+    for (let student of response) { // collecting additional data for specific  student
         let responsePerUser = await fetch(`${myApi}${response[student.id].id}`);
         responsePerUser = await responsePerUser.json();
 
@@ -63,13 +38,7 @@ async function collectingStudentsData() {
     }
 }
 
-let editedStudent;
-collectingStudentsData().then(() => {
-    displayingData();
-    // searching('Ari');
-})
-
-function displayingData(withHeader = true) {
+function displayingData(withHeader = true) { // create th and td and adding them to table in html
     studentsContainer.innerHTML = '';
 
     let tr = document.createElement('tr');
@@ -98,13 +67,11 @@ function displayingData(withHeader = true) {
     }
 }
 
-
 function deleteRow(rowNum) {
     delete studentsData[rowNum];
     displayingData();
 }
 
-// on event click on edit button
 function editRow(rowNum) {
     let studentData = studentsData[rowNum];
 
@@ -119,10 +86,10 @@ function editRow(rowNum) {
         hobby: `<input type="text" data-type="hobby" value="${studentData.hobby}">`,
         editButton: 'Confirm',
         deleteButton: 'Cancel'
-    }
+    } // replace text to input.
 
     displayingData(); /// updating
-    return studentData;
+    return studentData; // to save original student data.
 }
 
 function applyEditOnRow(rowNum, studentData, confirm = true) {
@@ -142,6 +109,41 @@ function applyEditOnRow(rowNum, studentData, confirm = true) {
     displayingData();
 }
 
+function searching(value){
+    displayingData(false);
+    let allRows =  document.querySelectorAll('tr');
+    studentsContainer.innerHTML = headerTR;
+    for (let i in allRows) { // i = 1, to skip first row of headers
+        if (allRows[i].textContent.toLowerCase().includes(value.toLowerCase())){
+            studentsContainer.appendChild(allRows[i])
+        } /// trow ERROR because all allRows becomes shorter
+    }
+}
+
+function sortBy(typeToSort){ // fix
+    let studentsArray = [];
+    console.log(studentsArray);
+    for (let student of Object.values(studentsData)){
+        for (let s of student){
+            console.log(s)
+        }
+        console.log(Array.of(student));
+        studentsArray.push(student);
+    }
+    
+    let sortedByType = [];
+    
+    studentsArray = [...studentsArray].sort((a,b) =>{
+        console.log(a[typeToSort]);
+        
+        return a[typeToSort] - b[typeToSort]
+    });
+
+    console.log(studentsArray);
+}
+
+
+// EVENT LISTENERS ------
 
 studentsContainer.addEventListener('click', (e) => {
     let row = e.target.getAttribute('data-row');
@@ -160,20 +162,10 @@ studentsContainer.addEventListener('click', (e) => {
 })
 
 document.querySelector('input').addEventListener('input', (event) => {
-    console.log('press');
-    console.log(event.target.value);
     searching(event.target.value)
 });
 
 
-function searching(value){
-    displayingData(false);
-    let allRows =  document.querySelectorAll('tr');
-    studentsContainer.innerHTML = headerTR;
-    for (let i in allRows) { // i = 1, to skip first row of headers
-        console.log(allRows[i]);
-        if (allRows[i].textContent.toLowerCase().includes(value.toLowerCase())){
-            studentsContainer.appendChild(allRows[i])
-        } /// trow ERROR because all allRows becomes shorter
-    }
-}
+// program:
+
+collectingStudentsData(); // from API
