@@ -5,13 +5,13 @@ const myApi = 'https://apple-seeds.herokuapp.com/api/users/';
 
 let studentsData = {};
 const headerTR =
-`<td data-type="firstName">firstName</td>
-<td data-type="lastName">lastName</td>
-<td data-type="capsule">capsule</td>
-<td data-type="gender">gender</td>
-<td data-type="age">age</td>
-<td data-type="city">city</td>
-<td data-type="hobby">hobby</td>`;
+`<th data-type="firstName">firstName</th>
+<th data-type="lastName">lastName</th>
+<th data-type="capsule">capsule</th>
+<th data-type="gender">gender</th>
+<th data-type="age">age</th>
+<th data-type="city">city</th>
+<th data-type="hobby">hobby</th>`;
 
 let editedStudent; // is updated. for edit mode.
 
@@ -43,8 +43,7 @@ function displayingData(withHeader = true) { // create th and td and adding them
 
     let tr = document.createElement('tr');
 
-    withHeader ? tr.innerHTML = headerTR : tr.innerHTML = ''; //// for search function.
-
+    withHeader ? tr.innerHTML = headerTR : tr.innerHTML = ''; //// option to use for search function. -- prevents two headers
 
     studentsContainer.appendChild(tr);
 
@@ -113,12 +112,12 @@ function searching(value){
     displayingData(false);
     let allRows =  document.querySelectorAll('tr');
     studentsContainer.innerHTML = headerTR;
-    for (let i in allRows) { // i = 1, to skip first row of headers
+    for (let i in allRows) {
         if (allRows[i].textContent.toLowerCase().includes(value.toLowerCase())){
             studentsContainer.appendChild(allRows[i])
         } /// trow ERROR because all allRows becomes shorter
     }
-}
+} // TODO: fix ERROR (doesnt break - trows error in console)
 
 function sortBy(typeToSort){ // fix
     let studentsArray = [];
@@ -157,7 +156,7 @@ studentsContainer.addEventListener('click', (e) => {
         deleteRow(row);
     }
     if (e.target.innerText == 'Cancel') {
-        applyEditOnRow(row, editedStudent, false); // need to fix!!!
+        applyEditOnRow(row, editedStudent, false);
     }
 })
 
@@ -168,4 +167,6 @@ document.querySelector('input').addEventListener('input', (event) => {
 
 // program:
 
-collectingStudentsData(); // from API
+collectingStudentsData().then(() => {// from API
+    displayingData();
+}); 
