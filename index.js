@@ -5,7 +5,7 @@ const myApi = 'https://apple-seeds.herokuapp.com/api/users/';
 
 let studentsData = {};
 const headerTR =
-`<th data-type="firstName">firstName</th>
+    `<th data-type="firstName">firstName</th>
 <th data-type="lastName">lastName</th>
 <th data-type="capsule">capsule</th>
 <th data-type="gender">gender</th>
@@ -14,7 +14,6 @@ const headerTR =
 <th data-type="hobby">hobby</th>`;
 
 let editedStudent; // is updated. for edit mode.
-
 
 
 //! FUNCTIONS 
@@ -40,13 +39,11 @@ async function collectingStudentsData() { // func to collect data from API
     document.querySelector('.spinner-container').style.display = 'none'; // ** hide loader when data finshed loading
 }
 
-function displayingData(withHeader = true, students = studentsData) { // create th and td and adding them to table in html
+function displayingData(students = studentsData) { // create th and td and adding them to table in html
     studentsContainer.innerHTML = '';
 
     let tr = document.createElement('tr');
-
-    withHeader ? tr.innerHTML = headerTR : tr.innerHTML = ''; // * option to use for search function. -- prevents two headers
-
+    tr.innerHTML = headerTR;
     studentsContainer.appendChild(tr);
 
     for (let student in students) {
@@ -94,50 +91,57 @@ function editRow(rowNum) {
 }
 
 function applyEditOnRow(rowNum, studentData, confirm = true) {
-    if (confirm){
-    let inputs = document.querySelectorAll('input')
-    let firstInput = true;// ignores search input (the first input)
-    for (let input of inputs) {
-        if (!firstInput) {
-            if (input.value != input.getAttribute('value')) {
-                let type = input.getAttribute('data-type');
-                studentData[type] = input.value;
-            }
-        } else firstInput = false; 
-    }
+    if (confirm) {
+        let inputs = document.querySelectorAll('input')
+        let firstInput = true; // ignores search input (the first input)
+        for (let input of inputs) {
+            if (!firstInput) {
+                if (input.value != input.getAttribute('value')) {
+                    let type = input.getAttribute('data-type');
+                    studentData[type] = input.value;
+                }
+            } else firstInput = false;
+        }
     }
     studentsData[rowNum] = studentData;
     displayingData();
 }
 
-function searching(value){
-    displayingData(false);
-    let allRows =  document.querySelectorAll('tr');
-    studentsContainer.innerHTML = headerTR;
+function searching(value) {
+    displayingData(); // false
+    let allRows = document.querySelectorAll('tr');
+    studentsContainer.innerHTML = ''; // headerTH
+
+    let isHeader = true; // * so to skip the header of the table
     for (let i in allRows) {
-        if (allRows[i].textContent.toLowerCase().includes(value.toLowerCase())){
-            studentsContainer.appendChild(allRows[i])
+        if (isHeader) {
+            studentsContainer.appendChild(allRows[i]);
+            isHeader = false;
+        } else {
+            if (allRows[i].textContent.toLowerCase().includes(value.toLowerCase())) {
+                studentsContainer.appendChild(allRows[i])
+            }
         }
     }
 } // TODO: fix ERROR (doesn't break - throws error in console because all allRows becomes shorter)
 
 
-function sortBy(typeToSort){ // fix
+function sortBy(typeToSort) {
     let studentsArray = [];
 
-    for (let student of Object.values(studentsData)){
+    for (let student of Object.values(studentsData)) {
         studentsArray.push([student[typeToSort], student.id]);
     }
-    
-    studentsArray.sort();
+
+    studentsArray.sort(); // * create array to sort him by the type to sort
 
     let sortedObj = {};
     let count = 0;
-    for (student of studentsArray){
-        sortedObj[count++] = studentsData[student[1]]
+    for (student of studentsArray) {
+        sortedObj[count++] = studentsData[student[1]] // creating new students obj by order of the sort
     }
 
-    displayingData(true, sortedObj);
+    displayingData(sortedObj);
 }
 
 
@@ -163,7 +167,6 @@ document.querySelector('input').addEventListener('input', (event) => {
     searching(event.target.value)
 });
 
-
 document.querySelector('select').addEventListener('input', (event) => {
     sortBy(event.target.value);
 });
@@ -171,9 +174,9 @@ document.querySelector('select').addEventListener('input', (event) => {
 
 // program:
 
-collectingStudentsData().then(() => {// from API
+collectingStudentsData().then(() => { // from API
     displayingData();
-}); 
+});
 
 
 
