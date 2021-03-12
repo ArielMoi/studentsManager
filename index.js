@@ -20,7 +20,6 @@ let editedStudent; // is updated. for edit mode.
 //! FUNCTIONS 
 
 async function collectingStudentsData() { // func to collect data from API
-    //TODO: add loader animation - -  - - - - -
     response = await fetch(myApi);
     response = await response.json();
 
@@ -37,6 +36,8 @@ async function collectingStudentsData() { // func to collect data from API
 
         studentsData[student.id] = response[student.id];
     }
+
+    document.querySelector('.spinner-container').style.display = 'none'; // ** hide loader when data finshed loading
 }
 
 function displayingData(withHeader = true, students = studentsData) { // create th and td and adding them to table in html
@@ -177,5 +178,4 @@ collectingStudentsData().then(() => {// from API
 
 
 // TODO:
-// - add loader.
 // - add weather widget.
