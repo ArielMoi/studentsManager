@@ -19,25 +19,28 @@ let editedStudent; // is updated. for edit mode.
 //! FUNCTIONS 
 
 async function collectingStudentsData() { // func to collect data from API
-    response = await fetch(myApi);
+    let response = await fetch(myApi);
     response = await response.json();
 
-    for (let student of response) { // collecting additional data for specific  student
-        let responsePerUser = await fetch(`${myApi}${response[student.id].id}`);
-        responsePerUser = await responsePerUser.json();
+    await Promise.all(
+        response.map(async (el, i) => {
+            let responsePerUser = await fetch(`${myApi}${i}`);
 
-        response[student.id].age = responsePerUser.age;
-        response[student.id].city = responsePerUser.city;
-        response[student.id].gender = responsePerUser.gender;
-        response[student.id].hobby = responsePerUser.hobby;
-        response[student.id].editButton = 'Edit';
-        response[student.id].deleteButton = 'Delete';
+            responsePerUser = await responsePerUser.json();
 
-        studentsData[student.id] = response[student.id];
-    }
+            response[el.id].age = responsePerUser.age;
+            response[el.id].city = responsePerUser.city;
+            response[el.id].gender = responsePerUser.gender;
+            response[el.id].hobby = responsePerUser.hobby;
+            response[el.id].editButton = 'Edit';
+            response[el.id].deleteButton = 'Delete';
 
-    document.querySelector('.spinner-container').style.display = 'none'; // ** hide loader when data finshed loading
+            studentsData[el.id] = response[el.id];
+        }))
+    
+    document.querySelector('.spinner-container').style.display = 'none'; // hide loader when data finshed loading
 }
+
 
 function displayingData(students = studentsData) { // create th and td and adding them to table in html
     studentsContainer.innerHTML = '';
@@ -173,8 +176,7 @@ document.querySelector('select').addEventListener('input', (event) => {
 
 
 // program:
-
-collectingStudentsData().then(() => { // from API
+collectingStudentsData().then(() => {
     displayingData();
 });
 
@@ -182,3 +184,18 @@ collectingStudentsData().then(() => { // from API
 
 // TODO:
 // - add weather widget.
+
+
+// ? weather
+
+studentsContainer.addEventListener('mouseover', (event) => {
+    if (event.target.getAttribute('data-type') == 'city') {
+        event.target.innerText != 'city' && console.log(event.target.innerText);
+        // fetch weather here.
+    }
+})
+
+
+async function fetchWeather(city) {
+    null;
+}
