@@ -16,7 +16,8 @@ const headerTR =
 let editedStudent; // is updated. for edit mode.
 
 
-// FUNCTIONS ---------
+
+//! FUNCTIONS 
 
 async function collectingStudentsData() { // func to collect data from API
     //TODO: add loader animation - -  - - - - -
@@ -38,28 +39,28 @@ async function collectingStudentsData() { // func to collect data from API
     }
 }
 
-function displayingData(withHeader = true) { // create th and td and adding them to table in html
+function displayingData(withHeader = true, students = studentsData) { // create th and td and adding them to table in html
     studentsContainer.innerHTML = '';
 
     let tr = document.createElement('tr');
 
-    withHeader ? tr.innerHTML = headerTR : tr.innerHTML = ''; //// option to use for search function. -- prevents two headers
+    withHeader ? tr.innerHTML = headerTR : tr.innerHTML = ''; // * option to use for search function. -- prevents two headers
 
     studentsContainer.appendChild(tr);
 
-    for (let student in studentsData) {
+    for (let student in students) {
         let tr = document.createElement('tr');
 
         tr.innerHTML =
-            `<td data-row="${student}" data-type="firstName">${studentsData[student].firstName}</td>
-        <td data-row="${student}" data-type="lastName">${studentsData[student].lastName}</td>
-        <td data-row="${student}" data-type="capsule">${studentsData[student].capsule}</td>
-        <td data-row="${student}" data-type="gender">${studentsData[student].gender}</td>
-        <td data-row="${student}" data-type="age">${studentsData[student].age}</td>
-        <td data-row="${student}" data-type="city">${studentsData[student].city}</td>
-        <td data-row="${student}" data-type="hobby">${studentsData[student].hobby}</td>
-        <button data-row="${student}" class='edit-button'>${studentsData[student].editButton}</button>
-        <button data-row="${student}" class='delete-button'>${studentsData[student].deleteButton}</button>
+            `<td data-row="${student}" data-type="firstName">${students[student].firstName}</td>
+        <td data-row="${student}" data-type="lastName">${students[student].lastName}</td>
+        <td data-row="${student}" data-type="capsule">${students[student].capsule}</td>
+        <td data-row="${student}" data-type="gender">${students[student].gender}</td>
+        <td data-row="${student}" data-type="age">${students[student].age}</td>
+        <td data-row="${student}" data-type="city">${students[student].city}</td>
+        <td data-row="${student}" data-type="hobby">${students[student].hobby}</td>
+        <button data-row="${student}" class='edit-button'>${students[student].editButton}</button>
+        <button data-row="${student}" class='delete-button'>${students[student].deleteButton}</button>
         `
 
         studentsContainer.appendChild(tr);
@@ -85,10 +86,10 @@ function editRow(rowNum) {
         hobby: `<input type="text" data-type="hobby" value="${studentData.hobby}">`,
         editButton: 'Confirm',
         deleteButton: 'Cancel'
-    } // replace text to input.
+    } //  replace text to input.
 
-    displayingData(); /// updating
-    return studentData; // to save original student data.
+    displayingData(); /// * updating
+    return studentData; //* to save original student data.
 }
 
 function applyEditOnRow(rowNum, studentData, confirm = true) {
@@ -117,32 +118,33 @@ function searching(value){
             studentsContainer.appendChild(allRows[i])
         } /// trow ERROR because all allRows becomes shorter
     }
-} // TODO: fix ERROR (doesnt break - trows error in console)
+} // TODO: fix ERROR (doesn't break - trows error in console)
+
 
 function sortBy(typeToSort){ // fix
     let studentsArray = [];
-    console.log(studentsArray);
+
     for (let student of Object.values(studentsData)){
-        for (let s of student){
-            console.log(s)
-        }
-        console.log(Array.of(student));
-        studentsArray.push(student);
+        studentsArray.push([student[typeToSort], student.id]);
     }
     
-    let sortedByType = [];
-    
-    studentsArray = [...studentsArray].sort((a,b) =>{
-        console.log(a[typeToSort]);
-        
-        return a[typeToSort] - b[typeToSort]
-    });
+    studentsArray.sort();
 
-    console.log(studentsArray);
+    let sortedObj = {};
+    let count = 0;
+    for (student of studentsArray){
+        console.log(student[1]);
+        // studentsData
+        console.log(studentsData[student[1]]);
+        sortedObj[count++] = studentsData[student[1]]
+    }
+
+    console.log(sortedObj);
+    displayingData(true, sortedObj);
 }
 
 
-// EVENT LISTENERS ------
+//! EVENT LISTENERS
 
 studentsContainer.addEventListener('click', (e) => {
     let row = e.target.getAttribute('data-row');
@@ -165,8 +167,22 @@ document.querySelector('input').addEventListener('input', (event) => {
 });
 
 
+document.querySelector('select').addEventListener('input', (event) => {
+    sortBy(event.target.value);
+});
+
+
+
+
 // program:
 
 collectingStudentsData().then(() => {// from API
     displayingData();
+    sortBy('age')
 }); 
+
+
+
+// TODO:
+// - add loader.
+// - add weather widget.
