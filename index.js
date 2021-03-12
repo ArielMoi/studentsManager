@@ -116,9 +116,9 @@ function searching(value){
     for (let i in allRows) {
         if (allRows[i].textContent.toLowerCase().includes(value.toLowerCase())){
             studentsContainer.appendChild(allRows[i])
-        } /// trow ERROR because all allRows becomes shorter
+        }
     }
-} // TODO: fix ERROR (doesn't break - trows error in console)
+} // TODO: fix ERROR (doesn't break - throws error in console because all allRows becomes shorter)
 
 
 function sortBy(typeToSort){ // fix
@@ -133,13 +133,9 @@ function sortBy(typeToSort){ // fix
     let sortedObj = {};
     let count = 0;
     for (student of studentsArray){
-        console.log(student[1]);
-        // studentsData
-        console.log(studentsData[student[1]]);
         sortedObj[count++] = studentsData[student[1]]
     }
 
-    console.log(sortedObj);
     displayingData(true, sortedObj);
 }
 
@@ -172,13 +168,10 @@ document.querySelector('select').addEventListener('input', (event) => {
 });
 
 
-
-
 // program:
 
 collectingStudentsData().then(() => {// from API
     displayingData();
-    sortBy('age')
 }); 
 
 
