@@ -11,3 +11,4 @@ manage API information.
 #
 //TODO:
 - add more design.
+- add local storage
