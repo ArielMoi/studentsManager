@@ -196,7 +196,7 @@ document.querySelector('select').addEventListener('input', (event) => {
 
 studentsContainer.addEventListener('mouseover', (event) => { // weather info getter
     if (event.target.getAttribute('data-type') == 'city') {
-        event.target.innerText != 'city' && fetchWeather(event.target.innerText,event.target)      
+        event.target.innerText != 'city' && fetchWeather(event.target.innerText,event.target) // fetch weather data from api and show it in DOM     
     }
 })
 studentsContainer.addEventListener('mouseout', (event) => { // weather info remover
