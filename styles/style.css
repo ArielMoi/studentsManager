@@ -1,7 +1,6 @@
 td,
 th {
   padding: 5px;
-  position: relative;
 }
 
 input {
@@ -10,6 +9,41 @@ input {
 
 .sort {
   float: right;
+  margin-left: 5px;
+}
+
+.search-container {
+  width: 95vw;
+}
+
+h1 {
+  text-align: center;
+}
+
+button {
+  width: 70px;
+  margin: 2px;
+  background: transparent;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  color: turquoise;
+  border: 1px solid turquoise;
+}
+
+.students-container {
+  text-align: center;
+  margin: 20px;
+  margin-right: auto;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 /* loader */
@@ -99,7 +133,7 @@ input {
 /* weather window */
 
 .weather-window {
-  position: absolute;
+  position: fixed;
   top: 27px;
   width: max-content;
   height: 25px;
@@ -108,4 +142,5 @@ input {
   color: #fff;
   z-index: 1;
   padding: 2px;
+  left: 5px;
 }

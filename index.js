@@ -153,20 +153,16 @@ async function fetchWeather(city, htmlElement) {
         `https://api.codetabs.com/v1/proxy?quest=api.openweathermap.org/data/2.5/weather?q=${city.split(' ').join('-')}&units=metric&appid=555866706cc6ebcb5c906b94a54a6c36`)
     weatherData = await weatherData.json();
 
-    createsWindowInHtml(htmlElement, weatherData.main.temp)
+    createsWindowInHtml(htmlElement, weatherData.main.temp, city)
 }
 
-function createsWindowInHtml(htmlElement, temp){
+function createsWindowInHtml(htmlElement, temp, city){
     let div = document.createElement('div');
 
     div.classList.add('weather-window')
-    div.innerHTML = `Temp: ${temp}&#x2103;`
+    div.innerHTML = `${city} temp: ${temp}&#x2103;`
 
     htmlElement.appendChild(div);
-
-    setTimeout(() => {
-        htmlElement.removeChild(div);
-    }, 1000) // to remove window after 1s.
 }
 
 
@@ -188,10 +184,12 @@ studentsContainer.addEventListener('click', (e) => {
     }
 })
 
+// search input
 document.querySelector('input').addEventListener('input', (event) => {
-    searching(event.target.value)
+    searching(event.target.value) // search on each input on search input
 });
 
+//sortBy input (select)
 document.querySelector('select').addEventListener('input', (event) => {
     sortBy(event.target.value);
 });
@@ -199,6 +197,11 @@ document.querySelector('select').addEventListener('input', (event) => {
 studentsContainer.addEventListener('mouseover', (event) => { // weather info getter
     if (event.target.getAttribute('data-type') == 'city') {
         event.target.innerText != 'city' && fetchWeather(event.target.innerText,event.target)      
+    }
+})
+studentsContainer.addEventListener('mouseout', (event) => { // weather info remover
+    if (event.target.getAttribute('data-type') == 'city') {
+        document.querySelector('.weather-window') && document.querySelector('.weather-window').remove(); // remove weather info on mouse out
     }
 })
 
