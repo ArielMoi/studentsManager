@@ -147,6 +147,28 @@ function sortBy(typeToSort) {
     displayingData(sortedObj);
 }
 
+// * weather window
+async function fetchWeather(city, htmlElement) {
+    let weatherData = await fetch(
+        `https://api.codetabs.com/v1/proxy?quest=api.openweathermap.org/data/2.5/weather?q=${city.split(' ').join('-')}&units=metric&appid=555866706cc6ebcb5c906b94a54a6c36`)
+    weatherData = await weatherData.json();
+
+    createsWindowInHtml(htmlElement, weatherData.main.temp)
+}
+
+function createsWindowInHtml(htmlElement, temp){
+    let div = document.createElement('div');
+
+    div.classList.add('weather-window')
+    div.innerHTML = `Temp: ${temp}&#x2103;`
+
+    htmlElement.appendChild(div);
+
+    setTimeout(() => {
+        htmlElement.removeChild(div);
+    }, 1000) // to remove window after 1s.
+}
+
 
 //! EVENT LISTENERS
 
@@ -174,28 +196,14 @@ document.querySelector('select').addEventListener('input', (event) => {
     sortBy(event.target.value);
 });
 
+studentsContainer.addEventListener('mouseover', (event) => { // weather info getter
+    if (event.target.getAttribute('data-type') == 'city') {
+        event.target.innerText != 'city' && fetchWeather(event.target.innerText,event.target)      
+    }
+})
+
 
 // program:
 collectingStudentsData().then(() => {
     displayingData();
 });
-
-
-
-// TODO:
-// - add weather widget.
-
-
-// ? weather
-
-studentsContainer.addEventListener('mouseover', (event) => {
-    if (event.target.getAttribute('data-type') == 'city') {
-        event.target.innerText != 'city' && console.log(event.target.innerText);
-        // fetch weather here.
-    }
-})
-
-
-async function fetchWeather(city) {
-    null;
-}
