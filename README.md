@@ -7,8 +7,8 @@ manage API information.
 - sort.
 - search.
 - weather data on cities.
+- localStorage.
 
 #
 //TODO:
 - add more design.
-- add local storage
