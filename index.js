@@ -37,7 +37,7 @@ async function collectingStudentsData() { // func to collect data from API
 
             studentsData[el.id] = response[el.id];
         }))
-    
+
     localStorage.setItem('studentsData', JSON.stringify(studentsData));
     document.querySelector('.spinner-container').style.display = 'none'; // hide loader when data finshed loading
 }
@@ -92,6 +92,7 @@ function editRow(rowNum) {
 
     displayingData(); /// * updating
     return studentData; //* to save original student data.
+
 }
 
 function applyEditOnRow(rowNum, studentData, confirm = true) {
@@ -158,7 +159,7 @@ async function fetchWeather(city, htmlElement) {
     createsWindowInHtml(htmlElement, weatherData.main.temp, city)
 }
 
-function createsWindowInHtml(htmlElement, temp, city){
+function createsWindowInHtml(htmlElement, temp, city) {
     let div = document.createElement('div');
 
     div.classList.add('weather-window')
@@ -186,7 +187,7 @@ studentsContainer.addEventListener('click', (e) => {
     }
 })
 
-function updateLocalStorage(){ // keep the local storage updated
+function updateLocalStorage() { // keep the local storage updated
     localStorage.removeItem('studentsData');
     localStorage.setItem('studentsData', JSON.stringify(studentsData));
 }
@@ -203,7 +204,7 @@ document.querySelector('select').addEventListener('input', (event) => {
 
 studentsContainer.addEventListener('mouseover', (event) => { // weather info getter
     if (event.target.getAttribute('data-type') == 'city') {
-        event.target.innerText != 'city' && fetchWeather(event.target.innerText,event.target) // fetch weather data from api and show it in DOM     
+        event.target.innerText != 'city' && fetchWeather(event.target.innerText, event.target) // fetch weather data from api and show it in DOM     
     }
 })
 studentsContainer.addEventListener('mouseout', (event) => { // weather info remover
@@ -214,13 +215,12 @@ studentsContainer.addEventListener('mouseout', (event) => { // weather info remo
 
 
 // * program:
-if (localStorage.getItem('studentsData')){ /// if data eas already loaded
+if (localStorage.getItem('studentsData')) { /// if data eas already loaded
     studentsData = JSON.parse(localStorage.getItem('studentsData'));
     document.querySelector('.spinner-container').style.display = 'none'; // hide loader when data finished loading
     displayingData();
-}else { // if data wasn't loaded yet
+} else { // if data wasn't loaded yet
     collectingStudentsData().then(() => {
         displayingData();
     });
 }
-

@@ -1,6 +1,25 @@
+body {
+  /* background-color: #314e52; */
+  background: url("Bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: #fff;
+}
+
 td,
 th {
   padding: 5px;
+}
+
+th {
+  background-color: #e7e6e1;
+  color: black;
+}
+
+td {
+  background-color: #f7f6e7;
+  color: black;
 }
 
 input {
@@ -26,11 +45,12 @@ button {
   background: transparent;
   border-radius: 5px;
   cursor: pointer;
+  color: #fff;
 }
 
 button:hover {
-  color: turquoise;
-  border: 1px solid turquoise;
+  color: #e7e6e1;
+  border: 1px solid #e7e6e1;
 }
 
 .students-container {
@@ -135,8 +155,8 @@ body {
 .weather-window {
   position: fixed;
   top: 27px;
-  width: max-content;
-  height: 25px;
+  width: 210px;
+  height: max-content;
   background: black;
   border-radius: 10px;
   color: #fff;
