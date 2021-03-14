@@ -74,7 +74,11 @@ function deleteRow(rowNum) {
     updateLocalStorage();
 }
 
+let isEdited = false;
+
 function editRow(rowNum) {
+    isEdited = true;
+
     let studentData = studentsData[rowNum];
 
     studentsData[rowNum] = {
@@ -108,6 +112,7 @@ function applyEditOnRow(rowNum, studentData, confirm = true) {
             } else firstInput = false;
         }
     }
+    isEdited = false;
     studentsData[rowNum] = studentData;
     displayingData();
     updateLocalStorage();
@@ -177,7 +182,9 @@ studentsContainer.addEventListener('click', (e) => {
         applyEditOnRow(row, editedStudent);
     }
     if (e.target.innerText == 'Edit') {
-        editedStudent = editRow(row);
+        if (!isEdited) {
+            editedStudent = editRow(row);
+        }
     }
     if (e.target.innerText == 'Delete') {
         deleteRow(row);
