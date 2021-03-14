@@ -10,5 +10,3 @@ manage API information.
 - localStorage.
 
 #
-//TODO:
-- add more design.
