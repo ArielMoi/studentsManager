@@ -38,9 +38,9 @@ async function collectingStudentsData() { // func to collect data from API
             studentsData[el.id] = response[el.id];
         }))
     
+    localStorage.setItem('studentsData', JSON.stringify(studentsData));
     document.querySelector('.spinner-container').style.display = 'none'; // hide loader when data finshed loading
 }
-
 
 function displayingData(students = studentsData) { // create th and td and adding them to table in html
     studentsContainer.innerHTML = '';
@@ -71,6 +71,7 @@ function displayingData(students = studentsData) { // create th and td and addin
 function deleteRow(rowNum) {
     delete studentsData[rowNum];
     displayingData();
+    updateLocalStorage();
 }
 
 function editRow(rowNum) {
@@ -108,6 +109,7 @@ function applyEditOnRow(rowNum, studentData, confirm = true) {
     }
     studentsData[rowNum] = studentData;
     displayingData();
+    updateLocalStorage();
 }
 
 function searching(value) {
@@ -184,6 +186,11 @@ studentsContainer.addEventListener('click', (e) => {
     }
 })
 
+function updateLocalStorage(){ // keep the local storage updated
+    localStorage.removeItem('studentsData');
+    localStorage.setItem('studentsData', JSON.stringify(studentsData));
+}
+
 // search input
 document.querySelector('input').addEventListener('input', (event) => {
     searching(event.target.value) // search on each input on search input
@@ -206,7 +213,14 @@ studentsContainer.addEventListener('mouseout', (event) => { // weather info remo
 })
 
 
-// program:
-collectingStudentsData().then(() => {
+// * program:
+if (localStorage.getItem('studentsData')){ /// if data eas already loaded
+    studentsData = JSON.parse(localStorage.getItem('studentsData'));
+    document.querySelector('.spinner-container').style.display = 'none'; // hide loader when data finished loading
     displayingData();
-});
+}else { // if data wasn't loaded yet
+    collectingStudentsData().then(() => {
+        displayingData();
+    });
+}
+
