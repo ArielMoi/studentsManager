@@ -4,10 +4,6 @@ also with current weather location when mouse hover a city name.
 
 #
 
-Link: www.arielmoi.github.io/studentsmanager/
-
-#
-
 # Features:
 - edit.
 - delete.
