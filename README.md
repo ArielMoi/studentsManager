@@ -4,7 +4,7 @@ also with current weather location when mouse hover a city name.
 
 #
 
-Link: arielmoi.github.io/studentsmanager/
+Link: www.arielmoi.github.io/studentsmanager/
 
 #
 
